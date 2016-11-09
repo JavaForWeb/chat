@@ -53,8 +53,8 @@ public class Main {
         config = Common.readConfig("chat.config");
 
         Common.displayTitle("Message System Demo");
-        //initHibernateDebug();
-
+       // initHibernateDebug();
+/*
         SendQueue sendMessage = new SendQueue(
             config.getProperty("activemq.brokerUrl"),
             "queue2",
@@ -76,9 +76,9 @@ public class Main {
         );
 
         receiveQueue.receiveMessages();
+*/
 
-        /*
-        SendTopic sendMessage = new SendTopic(
+        SendTopic sendMessage2 = new SendTopic(
             config.getProperty("activemq.brokerUrl"),
             "topic1",
             config.getProperty("activemq.write_user"),
@@ -86,9 +86,9 @@ public class Main {
         );
 
         if (args.length > 0) {
-            sendMessage.send(args[0]);
+            sendMessage2.send(args[0]);
         } else {
-            sendMessage.send();
+            sendMessage2.send();
         }
 
         ReceiveTopic receiveTopic = new ReceiveTopic(
@@ -99,7 +99,7 @@ public class Main {
         );
 
         receiveTopic.receiveMessages();
-        */
+
         System.out.println("Done");
     }
 }

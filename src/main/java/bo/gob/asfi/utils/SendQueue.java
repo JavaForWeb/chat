@@ -64,6 +64,8 @@ public class SendQueue
 
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			destination = session.createQueue(queueName);
+
+
 			producer = session.createProducer(destination);
 			TextMessage message2 = session.createTextMessage();
 
