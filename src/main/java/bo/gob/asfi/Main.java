@@ -3,7 +3,9 @@ package bo.gob.asfi;
 import bo.gob.asfi.utils.Common;
 import bo.gob.asfi.utils.DBSession;
 import bo.gob.asfi.utils.ReceiveQueue;
+import bo.gob.asfi.utils.ReceiveTopic;
 import bo.gob.asfi.utils.SendQueue;
+import bo.gob.asfi.utils.SendTopic;
 import org.apache.log4j.Logger;
 
 import java.util.Properties;
@@ -55,7 +57,7 @@ public class Main {
 
         SendQueue sendMessage = new SendQueue(
             config.getProperty("activemq.brokerUrl"),
-            "queue1",
+            "queue2",
             config.getProperty("activemq.write_user"),
             config.getProperty("activemq.write_pass")
         );
@@ -68,13 +70,36 @@ public class Main {
 
         ReceiveQueue receiveQueue = new ReceiveQueue(
             config.getProperty("activemq.brokerUrl"),
-            "queue1",
+            "queue2",
             config.getProperty("activemq.read_user"),
             config.getProperty("activemq.read_pass")
         );
 
         receiveQueue.receiveMessages();
 
+        /*
+        SendTopic sendMessage = new SendTopic(
+            config.getProperty("activemq.brokerUrl"),
+            "topic1",
+            config.getProperty("activemq.write_user"),
+            config.getProperty("activemq.write_pass")
+        );
+
+        if (args.length > 0) {
+            sendMessage.send(args[0]);
+        } else {
+            sendMessage.send();
+        }
+
+        ReceiveTopic receiveTopic = new ReceiveTopic(
+            config.getProperty("activemq.brokerUrl"),
+            "topic1",
+            config.getProperty("activemq.read_user"),
+            config.getProperty("activemq.read_pass")
+        );
+
+        receiveTopic.receiveMessages();
+        */
         System.out.println("Done");
     }
 }

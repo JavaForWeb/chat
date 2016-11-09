@@ -16,12 +16,12 @@ import java.util.Date;
 /**
  * Created by fernando on 11/9/16.
  */
-public class ReceiveQueue
+public class ReceiveTopic
 {
-	static Logger log = Logger.getLogger(ReceiveQueue.class.getName());
+	static Logger log = Logger.getLogger(ReceiveTopic.class.getName());
 
 	private String brokerUrl;
-	private String queueName;
+	private String topicName;
 	private String user;
 	private String pass;
 
@@ -32,10 +32,10 @@ public class ReceiveQueue
 	private MessageProducer producer = null;
 	private MessageConsumer consumer = null;
 
-	public ReceiveQueue(String brokerUrl, String queueName, String user, String pass)
+	public ReceiveTopic(String brokerUrl, String queueName, String user, String pass)
 	{
 		this.brokerUrl = brokerUrl;
-		this.queueName = queueName;
+		this.topicName = queueName;
 		this.user = user;
 		this.pass = pass;
 	}
@@ -52,7 +52,7 @@ public class ReceiveQueue
 
 			connection.start();
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-			destination = session.createQueue(queueName);
+			destination = session.createTopic(topicName);
 			consumer = session.createConsumer( destination );
 
 			Message message = null;
@@ -64,18 +64,18 @@ public class ReceiveQueue
 
 					if(message instanceof TextMessage) {
 						TextMessage text = (TextMessage) message;
-						System.out.println("Received is : " + text.getText());
+						System.out.println("Received topic is : " + text.getText());
 						log.info(text.getText());
 					}
 				}
 				while(message != null);
+
 				try {
 					Thread.sleep(250);
 				} catch(InterruptedException e) {
 				}
 
 			} while( new Date().getTime() <= endTime);
-
 
 			session.close();
 			connection.close();

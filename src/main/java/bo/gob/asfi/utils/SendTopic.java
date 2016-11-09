@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
-import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
@@ -16,12 +15,12 @@ import java.util.Date;
 /**
  * Created by fernando on 11/9/16.
  */
-public class ReceiveQueue
+public class SendTopic
 {
-	static Logger log = Logger.getLogger(ReceiveQueue.class.getName());
+	static Logger log = Logger.getLogger(SendTopic.class.getName());
 
 	private String brokerUrl;
-	private String queueName;
+	private String topicName;
 	private String user;
 	private String pass;
 
@@ -32,59 +31,55 @@ public class ReceiveQueue
 	private MessageProducer producer = null;
 	private MessageConsumer consumer = null;
 
-	public ReceiveQueue(String brokerUrl, String queueName, String user, String pass)
+	public SendTopic(String brokerUrl, String topicName, String user, String pass)
 	{
 		this.brokerUrl = brokerUrl;
-		this.queueName = queueName;
+		this.topicName = topicName;
 		this.user = user;
 		this.pass = pass;
 	}
 
-	public void receiveMessages()
+	private String createSampleMessage()
 	{
+		Date date = new Date();
+
+		String text = date.getTime() + " hello from topic: " + Thread.currentThread().getName();
+
+		return text;
+	}
+
+	public void send() {
+		send (createSampleMessage());
+	}
+
+	public void send(String message) {
 		try {
 			factory = new ActiveMQConnectionFactory( brokerUrl );
+
 			if (user != null && !user.equals("")) {
 				connection = factory.createConnection(user, pass);
 			} else {
 				connection = factory.createConnection();
 			}
-
 			connection.start();
+
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-			destination = session.createQueue(queueName);
-			consumer = session.createConsumer( destination );
+			destination = session.createTopic(topicName);
+			producer = session.createProducer(destination);
+			TextMessage message2 = session.createTextMessage();
 
-			Message message = null;
+			message2.setText( message );
+			producer.send( message2 );
+			System.out.println("Sent: " + message);
+			log.info("Sent: " + message);
 
-			Long endTime = new Date().getTime() + 60*1000;
-			do {
-				do {
-					message = consumer.receive(10);
-
-					if(message instanceof TextMessage) {
-						TextMessage text = (TextMessage) message;
-						System.out.println("Received is : " + text.getText());
-						log.info(text.getText());
-					}
-				}
-				while(message != null);
-				try {
-					Thread.sleep(250);
-				} catch(InterruptedException e) {
-				}
-
-			} while( new Date().getTime() <= endTime);
-
-
+			// Clean up
 			session.close();
 			connection.close();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			log.error(e.getMessage());
 		}
+
 	}
-
-
 }
