@@ -1,0 +1,25 @@
+group 'bo.gob.asfi'
+version '1.0'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.5
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.1.0.Final'
+    runtime 'org.postgresql:postgresql:9.3-1102-jdbc41'
+    compile group: 'log4j', name: 'log4j', version: '1.2.17'
+
+    //json mapper
+    compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.10'
+    compile group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.10'
+
+    //activemq
+    compile group: 'org.apache.activemq', name: 'activemq-all', version: '5.13.0'
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
