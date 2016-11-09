@@ -1,7 +1,6 @@
 .idea
 .gradle
 /build
-/build.gradle
 /out
-chat.config
+/chat.config
 
